@@ -1,5 +1,16 @@
 <template>
-    <div class="flex min-h-screen items-center justify-center bg-slate-800">
+    <div class="">
+        <Header />
         <slot />
     </div>
 </template>
+
+<script lang="ts" setup>
+onMounted(() => {
+    document.documentElement.classList.toggle(
+        'dark',
+        localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    )
+})
+</script>

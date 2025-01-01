@@ -1,0 +1,14 @@
+body {
+    @apply transition-colors duration-300;
+    font-family: 'Raleway', serif;
+}
+
+/* Light mode (default) */
+body {
+    @apply bg-slate-100 text-slate-900;
+}
+
+/* Dark mode */
+body.dark {
+    @apply bg-slate-800 text-slate-100;
+}
