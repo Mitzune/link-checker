@@ -8,12 +8,14 @@ export default defineNuxtConfig({
     imports: { dirs: ['./composables/*/*.{ts,js}'] },
     devtools: { enabled: true },
     pinia: {
-        storesDirs: ['./stores/**', './custom-folder/stores/**'],
+        storesDirs: ['./stores/**'],
     },
 
     runtimeConfig: {
         public: {
             GOOGLE_API: import.meta.env.GOOGLE_API_KEY,
+            VIRUS_TOTAL_API: import.meta.env.VIRUS_TOTAL_KEY,
+            URL_SCAN_API: import.meta.env.URL_SCAN_KEY,
         },
     },
 })

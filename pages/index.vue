@@ -1,5 +1,5 @@
 <template>
-    <div class="flex min-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4">
+    <div class="flex min-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-6">
         <div class="flex w-4/5 flex-col gap-2">
             <input
                 v-model="url"
@@ -10,40 +10,34 @@
         </div>
 
         <!-- link checkers -->
-        <div class="flex min-h-72 w-4/5 flex-col"></div>
+        <div class="flex min-h-72 w-4/5 flex-col">
+            <template v-if="(url && Object.values(linkInformation.data).length) || linkInformation.loading">
+                <p class="w-full text-center text-4xl font-semibold">
+                    {{ linkInformation.loading ? 'Searching...' : 'Completed' }}
+                </p>
+            </template>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 const url = ref('')
+const linkInformation = reactive({ data: {}, loading: false })
 
 const checkUrl = async () => {
     if (!url.value) return
-    googleApi()
-}
+    linkInformation.loading = true
 
-async function googleApi() {
-    const googleApi = await $fetch(
-        `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${useRuntimeConfig().public.GOOGLE_API}`,
-        {
-            method: 'POST',
-            body: {
-                client: {
-                    clientId: 'mitzune',
-                    clientVersion: '1.0.0',
-                },
-                threatInfo: {
-                    threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING'],
-                    platformTypes: ['WINDOWS'],
-                    threatEntryTypes: ['URL'],
-                    threatEntries: [{ url: url.value }],
-                },
-            },
-        },
-    )
-    return googleApi
-}
+    try {
+        const result = await $fetch('/api/linkChecker', { method: 'POST', body: { url: url.value } })
 
-// posible links
-// virustotal.com
+        if (result?.data) {
+            linkInformation.data = result.data
+        }
+    } catch (err) {
+        console.error(err)
+    } finally {
+        linkInformation.loading = false
+    }
+}
 </script>
