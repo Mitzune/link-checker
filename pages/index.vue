@@ -21,11 +21,17 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from '~/components/ui/toast'
+
+const { toast } = useToast()
 const url = ref('')
 const linkInformation = reactive({ data: {}, loading: false })
 
+const urlRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/\S*)?$/i
+
 const checkUrl = async () => {
-    if (!url.value) return
+    toast({ title: 'Testing', description: 'test' })
+    if (!url.value || !urlRegex.test(url.value)) return
     linkInformation.loading = true
 
     try {
